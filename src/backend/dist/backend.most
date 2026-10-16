@@ -1,0 +1,245 @@
+// Version: 4.0.0
+type AccessControlState__201339279 =
+  {
+    var adminAssigned : Bool;
+    userRoles : Map__230067015<Principal, UserRole__91647283>
+  };
+type Category__425461354 = Category__936342486;
+type Category__936342486 =
+  {
+    #assembly;
+    #cleaning;
+    #delivery;
+    #design;
+    #events;
+    #gardening;
+    #handyman;
+    #moving;
+    #other;
+    #photography;
+    #tutoring;
+    #webDevelopment
+  };
+type Data__44217153<K, V> = {var count : Nat__227979830; kvs : [var ?(K, V)]};
+type Internal__283199666<K, V> =
+  {children : [var ?Node__204828119<K, V>]; data : Data__44217153<K, V>};
+type JobId__11380121 = JobId__339598917;
+type JobId__281136202 = JobId__339598917;
+type JobId__339598917 = Nat;
+type JobId__433379627 = JobId__339598917;
+type JobId__567733654 = JobId__339598917;
+type JobStatus__357834694 = {#closed; #completed; #inProgress; #open};
+type JobStatus__374926235 = JobStatus__357834694;
+type Job__104073335 =
+  {
+    acceptedOfferId : ?Nat;
+    budget : {max : Nat; min : Nat};
+    category :
+      {
+        #assembly;
+        #cleaning;
+        #delivery;
+        #design;
+        #events;
+        #gardening;
+        #handyman;
+        #moving;
+        #other;
+        #photography;
+        #tutoring;
+        #webDevelopment
+      };
+    clientCompleted : Bool;
+    createdAt : Nat;
+    description : Text;
+    dueDate : ?Nat;
+    id : Nat;
+    images : [Blob];
+    location : Text;
+    owner : Principal;
+    status : {#closed; #completed; #inProgress; #open};
+    title : Text;
+    updatedAt : Nat;
+    workerCompleted : Bool
+  };
+type Job__848768964 =
+  {
+    acceptedOfferId : ?Nat;
+    budget : PriceRange__670974579;
+    category : Category__425461354;
+    clientCompleted : Bool;
+    createdAt : Timestamp__838678315;
+    description : Text;
+    dueDate : ?Timestamp__838678315;
+    id : JobId__567733654;
+    images : [Blob];
+    location : Text;
+    owner : UserId__967865204;
+    status : JobStatus__374926235;
+    title : Text;
+    updatedAt : Timestamp__838678315;
+    workerCompleted : Bool
+  };
+type Leaf__598469445<K, V> = {data : Data__44217153<K, V>};
+type Map__230067015<K, V> = Map__405889023<K, V>;
+type Map__405889023<K, V> = Map__603270868<K, V>;
+type Map__603270868<K, V> =
+  {var root : Node__204828119<K, V>; var size : Nat__227979830};
+type MessageId__159367956 = MessageId__291319400;
+type MessageId__291319400 = Nat;
+type Message__702227878 =
+  {body : Text; createdAt : Nat; id : Nat; jobId : Nat; sender : Principal};
+type Message__714344397 =
+  {
+    body : Text;
+    createdAt : Timestamp__551826535;
+    id : MessageId__159367956;
+    jobId : JobId__281136202;
+    sender : UserId__360694942
+  };
+type Nat__227979830 = Nat__920180692;
+type Nat__920180692 = Nat;
+type NewActor__769816496 =
+  {
+    accessControlState : AccessControlState__201339279;
+    jobState : {var nextJobId : Nat};
+    jobs : Map__230067015<Nat, Job__104073335>;
+    messageState : {var nextMessageId : Nat};
+    messages : Map__230067015<Nat, Message__702227878>;
+    offerState : {var nextOfferId : Nat};
+    offers : Map__230067015<Nat, Offer__912323204>;
+    profiles : Map__230067015<Principal, Profile__529753200>;
+    reviewState : {var nextReviewId : Nat};
+    reviews : Map__230067015<Nat, Review__1017206719>
+  };
+type Node__204828119<K, V> =
+  {#internal : Internal__283199666<K, V>; #leaf : Leaf__598469445<K, V>};
+type OfferId__230733344 = Nat;
+type OfferId__619917290 = OfferId__230733344;
+type OfferStatus__314966347 = OfferStatus__780937371;
+type OfferStatus__780937371 = {#accepted; #pending; #rejected};
+type Offer__448706843 =
+  {
+    createdAt : Timestamp__679288602;
+    durationDays : Nat;
+    id : OfferId__619917290;
+    jobId : JobId__433379627;
+    message : Text;
+    price : Nat;
+    status : OfferStatus__314966347;
+    worker : UserId__39721904
+  };
+type Offer__912323204 =
+  {
+    createdAt : Nat;
+    durationDays : Nat;
+    id : Nat;
+    jobId : Nat;
+    message : Text;
+    price : Nat;
+    status : {#accepted; #pending; #rejected};
+    worker : Principal
+  };
+type OldActor__512397517 = {};
+type PriceRange__350980086 = {max : Nat; min : Nat};
+type PriceRange__670974579 = PriceRange__350980086;
+type Profile__469549097 =
+  {
+    activeRole : UserRole__1047618515;
+    avatar : ?Blob;
+    bio : Text;
+    createdAt : Timestamp__432409533;
+    displayName : Text;
+    id : UserId__423380635;
+    serviceArea : Text;
+    skills : [Text];
+    updatedAt : Timestamp__432409533
+  };
+type Profile__529753200 =
+  {
+    activeRole : {#client; #worker};
+    avatar : ?Blob;
+    bio : Text;
+    createdAt : Nat;
+    displayName : Text;
+    id : Principal;
+    serviceArea : Text;
+    skills : [Text];
+    updatedAt : Nat
+  };
+type ReviewId__286800634 = ReviewId__496285678;
+type ReviewId__496285678 = Nat;
+type Review__1017206719 =
+  {
+    author : Principal;
+    comment : Text;
+    createdAt : Nat;
+    id : Nat;
+    jobId : Nat;
+    rating : Nat;
+    subject : Principal
+  };
+type Review__513345496 =
+  {
+    author : UserId__846737412;
+    comment : Text;
+    createdAt : Timestamp__952878099;
+    id : ReviewId__286800634;
+    jobId : JobId__11380121;
+    rating : Nat;
+    subject : UserId__846737412
+  };
+type Timestamp__301639476 = Nat;
+type Timestamp__432409533 = Timestamp__301639476;
+type Timestamp__551826535 = Timestamp__301639476;
+type Timestamp__679288602 = Timestamp__301639476;
+type Timestamp__838678315 = Timestamp__301639476;
+type Timestamp__952878099 = Timestamp__301639476;
+type UserId__158757552 = Principal;
+type UserId__360694942 = UserId__158757552;
+type UserId__39721904 = UserId__158757552;
+type UserId__423380635 = UserId__158757552;
+type UserId__846737412 = UserId__158757552;
+type UserId__967865204 = UserId__158757552;
+type UserRole__1047618515 = UserRole__451090586;
+type UserRole__451090586 = {#client; #worker};
+type UserRole__91647283 = {#admin; #guest; #user};
+{
+  "00000000_000000" : OldActor__512397517 -> NewActor__769816496
+}
+actor  {
+  stable accessControlState :
+    {
+      var adminAssigned : Bool;
+      userRoles : Map__230067015<Principal, UserRole__91647283>
+    };
+  stable jobState : {var nextJobId : Nat};
+  stable jobs :
+    {
+      var root : Node__204828119<JobId__339598917, Job__848768964>;
+      var size : Nat__227979830
+    };
+  stable messageState : {var nextMessageId : Nat};
+  stable messages :
+    {
+      var root : Node__204828119<MessageId__291319400, Message__714344397>;
+      var size : Nat__227979830
+    };
+  stable offerState : {var nextOfferId : Nat};
+  stable offers :
+    {
+      var root : Node__204828119<OfferId__230733344, Offer__448706843>;
+      var size : Nat__227979830
+    };
+  stable profiles :
+    {
+      var root : Node__204828119<UserId__158757552, Profile__469549097>;
+      var size : Nat__227979830
+    };
+  stable reviewState : {var nextReviewId : Nat};
+  stable reviews :
+    {
+      var root : Node__204828119<ReviewId__496285678, Review__513345496>;
+      var size : Nat__227979830
+    }
+};

@@ -1,0 +1,21 @@
+{
+  "overview": "A task marketplace where people post jobs they need done and others browse, send offers, get matched, chat and leave reviews.",
+  "features": [
+    "Sign in and build a profile with skills, service area and photo",
+    "Post a job with budget, category, location, date and photos",
+    "Search and filter jobs by keyword, category, price and location",
+    "Send an offer with a price, message and timeframe",
+    "Pick a worker and track the job from open to done",
+    "Chat inside each job between the two parties",
+    "Rate and review each other after the job is finished"
+  ],
+  "category": "marketplace",
+  "tags": [
+    "marketplace",
+    "jobs",
+    "gig-economy",
+    "freelance",
+    "community"
+  ],
+  "last_updated": "2026-10-16T02:46:07.263Z"
+}

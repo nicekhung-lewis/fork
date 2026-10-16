@@ -1,0 +1,278 @@
+type Value = 
+ variant {
+   "bool": bool;
+   float: float64;
+   "int": int;
+   "nat": nat;
+   "null";
+   "text": text;
+ };
+type UserRole__1 = 
+ variant {
+   admin;
+   guest;
+   user;
+ };
+type UserRole = 
+ variant {
+   client;
+   worker;
+ };
+type UserId = principal;
+type Timestamp = nat;
+type ReviewId = nat;
+type ReviewDraft = 
+ record {
+   comment: text;
+   rating: nat;
+ };
+type Review = 
+ record {
+   author: UserId;
+   comment: text;
+   createdAt: Timestamp;
+   id: ReviewId;
+   jobId: JobId;
+   rating: nat;
+   subject: UserId;
+ };
+type Result__1 = 
+ variant {
+   err: Error;
+   ok;
+ };
+type Result = 
+ record {
+   hasMore: bool;
+   rows: vec vec Cell;
+ };
+type PublicProfile = 
+ record {
+   profile: Profile;
+   stats: ProfileStats;
+ };
+type ProfileUpdate = 
+ record {
+   avatar: opt blob;
+   bio: opt text;
+   displayName: opt text;
+   serviceArea: opt text;
+   skills: opt vec text;
+ };
+type ProfileStats = 
+ record {
+   averageRating: float64;
+   completedJobs: nat;
+   reviewCount: nat;
+ };
+type Profile = 
+ record {
+   activeRole: UserRole;
+   avatar: opt blob;
+   bio: text;
+   createdAt: Timestamp;
+   displayName: text;
+   id: UserId;
+   serviceArea: text;
+   skills: vec text;
+   updatedAt: Timestamp;
+ };
+type PriceRange = 
+ record {
+   max: nat;
+   min: nat;
+ };
+type OfferStatus = 
+ variant {
+   accepted;
+   pending;
+   rejected;
+ };
+type OfferId = nat;
+type OfferDraft = 
+ record {
+   durationDays: nat;
+   message: text;
+   price: nat;
+ };
+type Offer = 
+ record {
+   createdAt: Timestamp;
+   durationDays: nat;
+   id: OfferId;
+   jobId: JobId;
+   message: text;
+   price: nat;
+   status: OfferStatus;
+   worker: UserId;
+ };
+type MessageId = nat;
+type Message = 
+ record {
+   body: text;
+   createdAt: Timestamp;
+   id: MessageId;
+   jobId: JobId;
+   sender: UserId;
+ };
+type JobUpdate = 
+ record {
+   budget: opt PriceRange;
+   category: opt Category;
+   description: opt text;
+   dueDate: opt Timestamp;
+   images: opt vec blob;
+   location: opt text;
+   title: opt text;
+ };
+type JobStatus = 
+ variant {
+   closed;
+   completed;
+   inProgress;
+   open;
+ };
+type JobSort = 
+ variant {
+   highestBudget;
+   newest;
+ };
+type JobPage = 
+ record {
+   jobs: vec Job;
+   total: nat;
+ };
+type JobId = nat;
+type JobFilter = 
+ record {
+   category: opt Category;
+   keyword: opt text;
+   location: opt text;
+   maxBudget: opt nat;
+   minBudget: opt nat;
+   sort: JobSort;
+ };
+type JobDraft = 
+ record {
+   budget: PriceRange;
+   category: Category;
+   description: text;
+   dueDate: opt Timestamp;
+   images: vec blob;
+   location: text;
+   title: text;
+ };
+type Job = 
+ record {
+   acceptedOfferId: opt nat;
+   budget: PriceRange;
+   category: Category;
+   clientCompleted: bool;
+   createdAt: Timestamp;
+   description: text;
+   dueDate: opt Timestamp;
+   id: JobId;
+   images: vec blob;
+   location: text;
+   owner: UserId;
+   status: JobStatus;
+   title: text;
+   updatedAt: Timestamp;
+   workerCompleted: bool;
+ };
+type Error = 
+ variant {
+   AmbiguousAttribute: record {
+                         field: text;
+                         sources: vec text;
+                       };
+   FrontendOriginMismatch: record {
+                             expected: vec text;
+                             got: text;
+                           };
+   FrontendOriginsNotConfigured;
+   MalformedCandid;
+   MissingField: text;
+   MixedSsoSources: record {
+                      otherKeys: vec text;
+                      ssoKeys: vec text;
+                    };
+   NoAttributes;
+   Stale: record {ageNs: nat;};
+   UnknownNonce;
+   UntrustedSsoSource: record {domain: text;};
+ };
+type Cell = 
+ record {
+   name: text;
+   value: Value;
+ };
+type Category = 
+ variant {
+   assembly;
+   cleaning;
+   delivery;
+   design;
+   events;
+   gardening;
+   handyman;
+   moving;
+   other;
+   photography;
+   tutoring;
+   webDevelopment;
+ };
+service : {
+  _initialize_access_control: () -> ();
+  _internet_identity_sign_in_finish: () -> (Result__1);
+  _internet_identity_sign_in_start: () -> (blob);
+  /// Accept one offer for a job the caller owns; rejects the rest and moves the
+  /// job to in-progress.
+  acceptOffer: (jobId: JobId, offerId: OfferId) -> (Offer);
+  assignCallerUserRole: (user: principal, role: UserRole__1) -> ();
+  /// Close a job the caller owns.
+  closeJob: (jobId: JobId) -> (Job);
+  /// Confirm completion from the caller's side; when both parties confirm the
+  /// job becomes completed.
+  confirmCompletion: (jobId: JobId) -> (Offer);
+  /// Create a job owned by the caller; returns the new job id.
+  createJob: (draft: JobDraft) -> (JobId);
+  /// Delete a job the caller owns.
+  deleteJob: (jobId: JobId) -> ();
+  execute: (qJson: text) -> (Result) query;
+  /// Return the backend API documentation as Markdown.
+  getApiDoc: () -> (text) query;
+  getCallerUserRole: () -> (UserRole__1) query;
+  /// Public job detail including its offers.
+  getJobDetail: (jobId: JobId) -> (opt Job) query;
+  /// Return the caller's own profile, or null when not yet created.
+  getMyProfile: () -> (opt Profile);
+  /// Public profile plus reputation aggregates for any user.
+  getPublicProfile: (user: UserId) -> (opt PublicProfile) query;
+  isCallerAdmin: () -> (bool) query;
+  /// Leave a 1–5 star review for the other party after a completed job.
+  leaveReview: (jobId: JobId, draft: ReviewDraft) -> (ReviewId);
+  /// List the messages of a job thread (participants only).
+  listMessages: (jobId: JobId) -> (vec Message) query;
+  /// List the caller's own jobs, optionally filtered by status.
+  listMyJobs: (status: opt JobStatus) -> (vec Job) query;
+  /// List the caller's own offers, optionally filtered by status.
+  listMyOffers: (status: opt OfferStatus) -> (vec Offer) query;
+  /// List all offers for a job (visible to the job owner).
+  listOffersForJob: (jobId: JobId) -> (vec Offer) query;
+  /// List reviews received by a user.
+  listReviewsForUser: (user: UserId) -> (vec Review) query;
+  schema: () -> (text) query;
+  /// Search open jobs with keyword / category / budget / location filters and sort.
+  searchJobs: (filter: JobFilter) -> (JobPage) query;
+  /// Send a chat message in a job thread (client or accepted worker only).
+  sendMessage: (jobId: JobId, body: text) -> (MessageId);
+  /// Switch the caller's active role between client and worker.
+  setMyRole: (role: UserRole) -> (Profile);
+  /// Submit an offer from the caller for a job.
+  submitOffer: (jobId: JobId, draft: OfferDraft) -> (OfferId);
+  /// Edit a job the caller owns.
+  updateJob: (jobId: JobId, update: JobUpdate) -> (Job);
+  /// Create or update the caller's profile.
+  upsertMyProfile: (update: ProfileUpdate) -> (Profile);
+}
